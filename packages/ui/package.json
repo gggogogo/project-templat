@@ -1,0 +1,33 @@
+{
+  "name": "@gw/utils",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.cjs"
+    }
+  },
+  "main": "dist/cjs/index",
+  "types": "dist/cjs/index.d.ts",
+  "module": "dist/esm/index",
+  "unpkg": "dist/umd/index",
+  "jsdelivr": "dist/umd/index",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "vite build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "unbuild": "^2.0.0",
+    "vite": "^5.0.12"
+  },
+  "dependencies": {}
+}
