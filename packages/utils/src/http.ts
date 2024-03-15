@@ -1,4 +1,11 @@
-import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios'
+import type { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import axios from 'axios'
+
+export interface Response<T = any> {
+  code: number
+  message: string
+  data: T
+}
 
 export class API {
   api: AxiosInstance
@@ -22,11 +29,11 @@ export class API {
     )
   }
   //   AxiosInterceptorManager<InternalAxiosRequestConfig>
-  reqInterceptorSuc(config: InternalAxiosRequestConfig) {
+  reqInterceptorSuc(config: InternalAxiosRequestConfig): InternalAxiosRequestConfig {
     return config
   }
 
-  resInterceptorSuc(res: AxiosResponse) {
+  resInterceptorSuc(res: AxiosResponse): Promise<any> {
     if (res.status === 200) {
       //   if (res.data.error_no == -10 || res.data.errorNo == -10) {
       //     return new Promise((resolve, reject) => {})
@@ -38,15 +45,15 @@ export class API {
       return Promise.reject(res)
     }
   }
-  resInterceptorFail(error: any) {
+  resInterceptorFail(error: any): Promise<any> {
     console.log('----请求失败：', error)
     const { response } = error
     if (response) {
       // 请求已发出，但是不在2xx的范围
       return Promise.reject(response)
     } else {
-      var err = error
-      var message = '网路服务异常，请稍后再试！'
+      const err = error
+      let message = '网路服务异常，请稍后再试！'
       if (!window.navigator.onLine) {
         console.log('----网路异常----')
         message = '网络异常，请检查网络是否连接正常！'
@@ -60,48 +67,15 @@ export class API {
     }
   }
 
-  getInstace() {
+  getInstace(): AxiosInstance {
     return this.api
   }
 
-  get(url: string, params: any) {
+  get<T = any>(url: string, params: Record<string, any>): Promise<AxiosResponse<Response<T>>> {
     return this.api.get(url, { params })
   }
 
-  post(url: string, data: any) {
+  post<T = any, D = any>(url: string, data: D): Promise<AxiosResponse<Response<T>>> {
     return this.api.post(url, data)
   }
-}
-
-export interface TztServiceConfig {
-  action: string | number
-  reqlinkType: number
-}
-
-export const tztAPI = async (
-  query: Record<string, any> = {},
-  config = {},
-  tztServiceConfig: TztServiceConfig = {
-    action: '1237',
-    reqlinkType: 2,
-  },
-) => {
-  let params = {
-    action: tztServiceConfig.action || '1237',
-    reqlinkType: tztServiceConfig.reqlinkType || 2,
-    param: JSON.stringify({ ...query }),
-  }
-  return new Promise((resolve, reject) => {
-    $ &&
-      $.getData(
-        config,
-        params,
-        (res: any) => {
-          resolve(res)
-        },
-        (err: Error) => {
-          reject(err)
-        },
-      )
-  })
 }

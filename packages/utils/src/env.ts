@@ -66,10 +66,8 @@ class Env {
     this.isAndroid = this.isAPP && /android/i.test(ua)
 
     this.isBeta =
-      /__crsec-beta__=1/i.test(location.href) ||
-      /^((local)|(localhost))/i.test(location.host) ||
-      /sit-static.crsec.com.cn/i.test(location.host) ||
-      /crqywxcs.crsec.com.cn/i.test(location.host)
+      /__beta__=1/i.test(location.href) ||
+      /^((local)|(localhost))/i.test(location.host)
 
     this.isWX = /micromessenger/i.test(ua)
     this.isWXMiniProgram = this.isWX && /miniprogram/i.test(ua)
