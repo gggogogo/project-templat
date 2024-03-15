@@ -1,7 +1,6 @@
-import path from 'path'
-
 // @ts-check
 const { defineConfig } = require('eslint-define-config')
+const path = require('path')
 
 /// <reference types="@eslint-types/typescript-eslint" />
 
@@ -20,6 +19,7 @@ module.exports = defineConfig({
     node: true,
     browser: true,
   },
+  ignorePatterns: ['packages/ui', 'packages/create-cli/templates'],
   plugins: ['@typescript-eslint'],
   parser: '@typescript-eslint/parser',
   parserOptions: {

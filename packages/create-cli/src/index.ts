@@ -4,18 +4,7 @@ import { fileURLToPath } from 'node:url'
 import spawn from 'cross-spawn'
 import minimist from 'minimist'
 import prompts from 'prompts'
-import {
-  blue,
-  cyan,
-  green,
-  lightBlue,
-  lightGreen,
-  lightRed,
-  magenta,
-  red,
-  reset,
-  yellow,
-} from 'kolorist'
+import { blue, green, lightBlue, red, reset, yellow } from 'kolorist'
 
 // Avoids autoconversion to number of the project name by defining that the args
 // non associated with an option ( _ ) needs to be parsed as a string. See #4606
@@ -30,206 +19,72 @@ type Framework = {
   name: string
   display: string
   color: ColorFunc
+  description?: string
   variants: FrameworkVariant[]
 }
 type FrameworkVariant = {
   name: string
   display: string
   color: ColorFunc
+  description?: string
+  packageNameMsg?: string
   customCommand?: string
 }
 
 const FRAMEWORKS: Framework[] = [
   {
-    name: 'vanilla',
-    display: 'Vanilla',
+    name: 'business',
+    display: '业务项目模版',
+    description: '选择业务项目/页面模版',
     color: yellow,
     variants: [
       {
-        name: 'vanilla-ts',
-        display: 'TypeScript',
+        name: 'vue2-spa',
+        display: 'Vue2SPA',
+        description: '创建vue2单页应用模版项目/子包',
+        packageNameMsg: '请输入项目名称',
         color: blue,
       },
       {
-        name: 'vanilla',
-        display: 'JavaScript',
-        color: yellow,
-      },
-    ],
-  },
-  {
-    name: 'vue',
-    display: 'Vue',
-    color: green,
-    variants: [
-      {
-        name: 'vue-ts',
-        display: 'TypeScript',
-        color: blue,
-      },
-      {
-        name: 'vue',
-        display: 'JavaScript',
+        name: 'vue2-mpa',
+        display: 'Vue2MPA',
+        description: '创建vue2多页应用模版项目/子包',
+        packageNameMsg: '请输入项目/子包名称',
         color: yellow,
       },
       {
-        name: 'custom-create-vue',
-        display: 'Customize with create-vue ↗',
+        name: 'vue2-page',
+        display: 'Vue2Page',
+        description: '创建vue2多页应用页面模版，通常在 mpa 项目中新增页面使用',
+        packageNameMsg: '请输入页面名称',
         color: green,
-        customCommand: 'npm create vue@latest TARGET_DIR',
-      },
-      {
-        name: 'custom-nuxt',
-        display: 'Nuxt ↗',
-        color: lightGreen,
-        customCommand: 'npm exec nuxi init TARGET_DIR',
       },
     ],
   },
   {
-    name: 'react',
-    display: 'React',
-    color: cyan,
-    variants: [
-      {
-        name: 'react-ts',
-        display: 'TypeScript',
-        color: blue,
-      },
-      {
-        name: 'react-swc-ts',
-        display: 'TypeScript + SWC',
-        color: blue,
-      },
-      {
-        name: 'react',
-        display: 'JavaScript',
-        color: yellow,
-      },
-      {
-        name: 'react-swc',
-        display: 'JavaScript + SWC',
-        color: yellow,
-      },
-    ],
-  },
-  {
-    name: 'preact',
-    display: 'Preact',
-    color: magenta,
-    variants: [
-      {
-        name: 'preact-ts',
-        display: 'TypeScript',
-        color: blue,
-      },
-      {
-        name: 'preact',
-        display: 'JavaScript',
-        color: yellow,
-      },
-    ],
-  },
-  {
-    name: 'lit',
-    display: 'Lit',
-    color: lightRed,
-    variants: [
-      {
-        name: 'lit-ts',
-        display: 'TypeScript',
-        color: blue,
-      },
-      {
-        name: 'lit',
-        display: 'JavaScript',
-        color: yellow,
-      },
-    ],
-  },
-  {
-    name: 'svelte',
-    display: 'Svelte',
-    color: red,
-    variants: [
-      {
-        name: 'svelte-ts',
-        display: 'TypeScript',
-        color: blue,
-      },
-      {
-        name: 'svelte',
-        display: 'JavaScript',
-        color: yellow,
-      },
-      {
-        name: 'custom-svelte-kit',
-        display: 'SvelteKit ↗',
-        color: red,
-        customCommand: 'npm create svelte@latest TARGET_DIR',
-      },
-    ],
-  },
-  {
-    name: 'solid',
-    display: 'Solid',
-    color: blue,
-    variants: [
-      {
-        name: 'solid-ts',
-        display: 'TypeScript',
-        color: blue,
-      },
-      {
-        name: 'solid',
-        display: 'JavaScript',
-        color: yellow,
-      },
-    ],
-  },
-  {
-    name: 'qwik',
-    display: 'Qwik',
+    name: 'ui-component',
+    display: 'UI组件模版',
+    description: '选择UI组件模版，服务于通用组件库',
     color: lightBlue,
     variants: [
       {
-        name: 'qwik-ts',
-        display: 'TypeScript',
-        color: lightBlue,
-      },
-      {
-        name: 'qwik',
-        display: 'JavaScript',
-        color: yellow,
-      },
-      {
-        name: 'custom-qwik-city',
-        display: 'QwikCity ↗',
-        color: lightBlue,
-        customCommand: 'npm create qwik@latest basic TARGET_DIR',
-      },
-    ],
-  },
-  {
-    name: 'others',
-    display: 'Others',
-    color: reset,
-    variants: [
-      {
-        name: 'create-vite-extra',
-        display: 'create-vite-extra ↗',
-        color: reset,
-        customCommand: 'npm create vite-extra@latest TARGET_DIR',
-      },
-      {
-        name: 'create-electron-vite',
-        display: 'create-electron-vite ↗',
-        color: reset,
-        customCommand: 'npm create electron-vite@latest TARGET_DIR',
+        name: 'ui-vue2',
+        display: 'UIVue2',
+        description: '创建vue2UI组件库组件',
+        packageNameMsg: '请输入组件名称',
+        color: blue,
       },
     ],
   },
 ]
+
+const PackageNameConfigs = FRAMEWORKS.flatMap((f: Framework) => f.variants).reduce(
+  (obj: Record<string, string>, v: FrameworkVariant) => {
+    obj[v.name] = v.packageNameMsg || '输入项目/组件/页面名称:'
+    return obj
+  },
+  {},
+)
 
 const TEMPLATES = FRAMEWORKS.map(
   (f) => (f.variants && f.variants.map((v) => v.name)) || [f.name],
@@ -239,40 +94,68 @@ const renameFiles: Record<string, string | undefined> = {
   _gitignore: '.gitignore',
 }
 
-const defaultTargetDir = 'vite-project'
+const defaultTargetDir = 'package-name'
 
 async function init() {
   const argTargetDir = formatTargetDir(argv._[0])
   const argTemplate = argv.template || argv.t
 
   let targetDir = argTargetDir || defaultTargetDir
-  const getProjectName = () =>
-    targetDir === '.' ? path.basename(path.resolve()) : targetDir
+  const getProjectName = () => (targetDir === '.' ? path.basename(path.resolve()) : targetDir)
 
-  let result: prompts.Answers<
-    'projectName' | 'overwrite' | 'packageName' | 'framework' | 'variant'
-  >
+  let result: prompts.Answers<'overwrite' | 'packageName' | 'framework' | 'variant'>
 
   try {
     result = await prompts(
       [
         {
+          type: argTemplate && TEMPLATES.includes(argTemplate) ? null : 'select',
+          name: 'framework',
+          message:
+            typeof argTemplate === 'string' && !TEMPLATES.includes(argTemplate)
+              ? reset(`"${argTemplate}" isn't a valid template. Please choose from below: `)
+              : reset('Select a framework:'),
+          initial: 0,
+          choices: FRAMEWORKS.map((framework) => {
+            const frameworkColor = framework.color
+            return {
+              title: frameworkColor(framework.display || framework.name),
+              value: framework,
+              description: framework.description,
+            }
+          }),
+        },
+        {
+          type: (framework: Framework) => (framework && framework.variants ? 'select' : null),
+          name: 'variant',
+          message: reset('Select a variant:'),
+          choices: (framework: Framework) =>
+            framework.variants.map((variant) => {
+              const variantColor = variant.color
+              return {
+                title: variantColor(variant.display || variant.name),
+                value: variant.name,
+                description: variant.description,
+              }
+            }),
+        },
+        {
           type: argTargetDir ? null : 'text',
-          name: 'projectName',
-          message: reset('Project name:'),
+          name: 'packageName',
+          message: (variant: string) => {
+            console.log('FBI WARNING>>>>>>>> ~ init ~ variant:', variant)
+            return reset(PackageNameConfigs[variant as keyof typeof PackageNameConfigs])
+          },
           initial: defaultTargetDir,
           onState: (state) => {
             targetDir = formatTargetDir(state.value) || defaultTargetDir
           },
         },
         {
-          type: () =>
-            !fs.existsSync(targetDir) || isEmpty(targetDir) ? null : 'select',
+          type: () => (!fs.existsSync(targetDir) || isEmpty(targetDir) ? null : 'select'),
           name: 'overwrite',
           message: () =>
-            (targetDir === '.'
-              ? 'Current directory'
-              : `Target directory "${targetDir}"`) +
+            (targetDir === '.' ? 'Current directory' : `Target directory "${targetDir}"`) +
             ` is not empty. Please choose how to proceed:`,
           initial: 0,
           choices: [
@@ -304,41 +187,7 @@ async function init() {
           name: 'packageName',
           message: reset('Package name:'),
           initial: () => toValidPackageName(getProjectName()),
-          validate: (dir) =>
-            isValidPackageName(dir) || 'Invalid package.json name',
-        },
-        {
-          type:
-            argTemplate && TEMPLATES.includes(argTemplate) ? null : 'select',
-          name: 'framework',
-          message:
-            typeof argTemplate === 'string' && !TEMPLATES.includes(argTemplate)
-              ? reset(
-                  `"${argTemplate}" isn't a valid template. Please choose from below: `,
-                )
-              : reset('Select a framework:'),
-          initial: 0,
-          choices: FRAMEWORKS.map((framework) => {
-            const frameworkColor = framework.color
-            return {
-              title: frameworkColor(framework.display || framework.name),
-              value: framework,
-            }
-          }),
-        },
-        {
-          type: (framework: Framework) =>
-            framework && framework.variants ? 'select' : null,
-          name: 'variant',
-          message: reset('Select a variant:'),
-          choices: (framework: Framework) =>
-            framework.variants.map((variant) => {
-              const variantColor = variant.color
-              return {
-                title: variantColor(variant.display || variant.name),
-                value: variant.name,
-              }
-            }),
+          validate: (dir) => isValidPackageName(dir) || 'Invalid package.json name',
         },
       ],
       {
@@ -364,12 +213,7 @@ async function init() {
   }
 
   // determine template
-  let template: string = variant || framework?.name || argTemplate
-  let isReactSwc = false
-  if (template.includes('-swc')) {
-    isReactSwc = true
-    template = template.replace('-swc', '')
-  }
+  const template: string = variant || framework?.name || argTemplate
 
   const pkgInfo = pkgFromUserAgent(process.env.npm_config_user_agent)
   const pkgManager = pkgInfo ? pkgInfo.name : 'npm'
@@ -419,7 +263,7 @@ async function init() {
 
   const templateDir = path.resolve(
     fileURLToPath(import.meta.url),
-    '../..',
+    '../../templates',
     `template-${template}`,
   )
 
@@ -437,26 +281,16 @@ async function init() {
     write(file)
   }
 
-  const pkg = JSON.parse(
-    fs.readFileSync(path.join(templateDir, `package.json`), 'utf-8'),
-  )
+  const pkg = JSON.parse(fs.readFileSync(path.join(templateDir, `package.json`), 'utf-8'))
 
   pkg.name = packageName || getProjectName()
 
   write('package.json', JSON.stringify(pkg, null, 2) + '\n')
 
-  if (isReactSwc) {
-    setupReactSwc(root, template.endsWith('-ts'))
-  }
-
   const cdProjectName = path.relative(cwd, root)
   console.log(`\nDone. Now run:\n`)
   if (root !== cwd) {
-    console.log(
-      `  cd ${
-        cdProjectName.includes(' ') ? `"${cdProjectName}"` : cdProjectName
-      }`,
-    )
+    console.log(`  cd ${cdProjectName.includes(' ') ? `"${cdProjectName}"` : cdProjectName}`)
   }
   switch (pkgManager) {
     case 'yarn':
@@ -485,9 +319,7 @@ function copy(src: string, dest: string) {
 }
 
 function isValidPackageName(projectName: string) {
-  return /^(?:@[a-z\d\-*~][a-z\d\-*._~]*\/)?[a-z\d\-~][a-z\d\-._~]*$/.test(
-    projectName,
-  )
+  return /^(?:@[a-z\d\-*~][a-z\d\-*._~]*\/)?[a-z\d\-~][a-z\d\-._~]*$/.test(projectName)
 }
 
 function toValidPackageName(projectName: string) {
@@ -533,26 +365,6 @@ function pkgFromUserAgent(userAgent: string | undefined) {
     name: pkgSpecArr[0],
     version: pkgSpecArr[1],
   }
-}
-
-function setupReactSwc(root: string, isTs: boolean) {
-  editFile(path.resolve(root, 'package.json'), (content) => {
-    return content.replace(
-      /"@vitejs\/plugin-react": ".+?"/,
-      `"@vitejs/plugin-react-swc": "^3.5.0"`,
-    )
-  })
-  editFile(
-    path.resolve(root, `vite.config.${isTs ? 'ts' : 'js'}`),
-    (content) => {
-      return content.replace('@vitejs/plugin-react', '@vitejs/plugin-react-swc')
-    },
-  )
-}
-
-function editFile(file: string, callback: (content: string) => string) {
-  const content = fs.readFileSync(file, 'utf-8')
-  fs.writeFileSync(file, callback(content), 'utf-8')
 }
 
 init().catch((e) => {

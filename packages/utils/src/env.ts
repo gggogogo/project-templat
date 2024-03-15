@@ -29,6 +29,16 @@ class Env {
    */
   isBeta: boolean
 
+  /**
+   * 是否是微信环境
+   */
+  isWX: boolean
+
+  /**
+   * 是否是微信小程序环境
+   */
+  isWXMiniProgram: boolean
+
   constructor() {
     this.isAPP = false
     this.isNode = false
@@ -38,6 +48,8 @@ class Env {
     this.isAndroid = false
 
     this.isBeta = false
+    this.isWX = false
+    this.isWXMiniProgram = false
 
     this.createEnv()
   }
@@ -53,7 +65,14 @@ class Env {
     this.isIOS = this.isAPP && /iphone|ipad|ipod|ios/i.test(ua)
     this.isAndroid = this.isAPP && /android/i.test(ua)
 
-    this.isBeta = /beta=1/i.test(location.href) || /(local)|(localhost)/i.test(location.host)
+    this.isBeta =
+      /__crsec-beta__=1/i.test(location.href) ||
+      /^((local)|(localhost))/i.test(location.host) ||
+      /sit-static.crsec.com.cn/i.test(location.host) ||
+      /crqywxcs.crsec.com.cn/i.test(location.host)
+
+    this.isWX = /micromessenger/i.test(ua)
+    this.isWXMiniProgram = this.isWX && /miniprogram/i.test(ua)
   }
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "@crsec/tiny-utils",
-  "version": "0.0.1-beta.18",
+  "version": "0.0.1-beta.19",
   "description": "",
   "type": "module",
   "main": "dist/cjs/index",
