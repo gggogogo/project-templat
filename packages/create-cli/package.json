@@ -1,0 +1,45 @@
+{
+  "name": "@crsec/create-cli",
+  "version": "0.0.2-beta.2",
+  "type": "module",
+  "license": "MIT",
+  "author": "",
+  "bin": {
+    "@crsec/create-cli": "index.js",
+    "ccc": "index.js"
+  },
+  "files": [
+    "index.js",
+    "template-*",
+    "dist"
+  ],
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "dev": "unbuild --stub",
+    "build": "unbuild",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build",
+    "release-major": "standard-version --release-as major",
+    "release-minor": "standard-version --release-as minor",
+    "release-patch": "standard-version --release-as patch",
+    "release-beta": "standard-version  --prerelease beta && npm publish --tag beta"
+  },
+  "engines": {
+    "node": "^18.0.0 || >=20.0.0"
+  },
+  "homepage": "",
+  "devDependencies": {
+    "@types/cross-spawn": "^6.0.6",
+    "@types/minimist": "^1.2.5",
+    "@types/prompts": "^2.4.9",
+    "cross-spawn": "^7.0.3",
+    "kolorist": "^1.8.0",
+    "minimist": "^1.2.8",
+    "prompts": "^2.4.2",
+    "standard-version": "^9.5.0",
+    "unbuild": "^2.0.0"
+  },
+  "publishConfig": {
+    "registry": "http://10.0.16.127:8081/repository/common_npm_local/"
+  }
+}
